@@ -1,37 +1,20 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 )
 
-type CognitoEvent struct {
-	Version    string          `json:"version"`
-	Region     string          `json:"region"`
-	UserPoolID string          `json:"userPoolId"`
-	Trigger    string          `json:"triggerSource"`
-	Request    CognitoRequest  `json:"request"`
-	Response   CognitoResponse `json:"response"`
-}
-
-type CognitoRequest struct {
-	UserAttributes map[string]string `json:"userAttributes"`
-}
-
-type CognitoResponse struct {
-	UserAttributes map[string]string `json:"userAttributes"`
-}
-
 func main() {
 	lambda.Start(handlePostConfirmation)
 }
 
-func handlePostConfirmation(ctx context.Context, event CognitoEvent) (CognitoEvent, error) {
+func handlePostConfirmation(event events.CognitoEventUserPoolsPostConfirmation) (events.CognitoEventUserPoolsPostConfirmation, error) {
 	fmt.Println("Event:", event)
 	userEmail := event.Request.UserAttributes["email"]
 	fmt.Println("User email:", userEmail)
@@ -40,7 +23,6 @@ func handlePostConfirmation(ctx context.Context, event CognitoEvent) (CognitoEve
 	// if err != nil {
 	// 	return "", err
 	// }
-	event.Response.UserAttributes = event.Request.UserAttributes
 
 	return event, nil
 }
