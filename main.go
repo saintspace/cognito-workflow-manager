@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -28,14 +27,8 @@ func main() {
 	lambda.Start(handlePostConfirmation)
 }
 
-func handlePostConfirmation(ctx context.Context, eventStr string) (string, error) {
-	var event CognitoEvent
-	fmt.Println("Event:", eventStr)
-	err := json.Unmarshal([]byte(eventStr), &event)
-	if err != nil {
-		return "", fmt.Errorf("failed to unmarshal event: %v", err)
-	}
-
+func handlePostConfirmation(ctx context.Context, event CognitoEvent) (string, error) {
+	fmt.Println("Event:", event)
 	userEmail := event.Request.UserAttributes["email"]
 	fmt.Println("User email:", userEmail)
 	// Initialize the user in your datastore
