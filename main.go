@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -36,8 +37,8 @@ func handlePostConfirmation(ctx context.Context, event CognitoEvent) (CognitoEve
 	// if err != nil {
 	// 	return "", err
 	// }
-
-	event.Response = struct{}{}
+	response := events.CognitoEventUserPoolsPostConfirmationResponse{}
+	event.Response = response
 
 	return event, nil
 }
