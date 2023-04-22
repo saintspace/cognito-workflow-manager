@@ -11,15 +11,19 @@ import (
 )
 
 type CognitoEvent struct {
-	Version    string         `json:"version"`
-	Region     string         `json:"region"`
-	UserPoolID string         `json:"userPoolId"`
-	Trigger    string         `json:"triggerSource"`
-	Request    CognitoRequest `json:"request"`
-	Response   interface{}    `json:"-"`
+	Version    string          `json:"version"`
+	Region     string          `json:"region"`
+	UserPoolID string          `json:"userPoolId"`
+	Trigger    string          `json:"triggerSource"`
+	Request    CognitoRequest  `json:"request"`
+	Response   CognitoResponse `json:"response"`
 }
 
 type CognitoRequest struct {
+	UserAttributes map[string]string `json:"userAttributes"`
+}
+
+type CognitoResponse struct {
 	UserAttributes map[string]string `json:"userAttributes"`
 }
 
@@ -36,7 +40,7 @@ func handlePostConfirmation(ctx context.Context, event CognitoEvent) (CognitoEve
 	// if err != nil {
 	// 	return "", err
 	// }
-	event.Response = nil
+	event.Response.UserAttributes = event.Request.UserAttributes
 
 	return event, nil
 }
