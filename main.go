@@ -27,7 +27,7 @@ func main() {
 	lambda.Start(handlePostConfirmation)
 }
 
-func handlePostConfirmation(ctx context.Context, event CognitoEvent) (string, error) {
+func handlePostConfirmation(ctx context.Context, event CognitoEvent) (CognitoEvent, error) {
 	fmt.Println("Event:", event)
 	userEmail := event.Request.UserAttributes["email"]
 	fmt.Println("User email:", userEmail)
@@ -37,7 +37,9 @@ func handlePostConfirmation(ctx context.Context, event CognitoEvent) (string, er
 	// 	return "", err
 	// }
 
-	return "User initialized", nil
+	event.Response = struct{}{}
+
+	return event, nil
 }
 
 func initializeUserInDatastore(userEmail string) error {
