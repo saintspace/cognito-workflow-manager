@@ -30,18 +30,19 @@ func main() {
 
 func handlePostConfirmation(ctx context.Context, eventStr string) (string, error) {
 	var event CognitoEvent
+	fmt.Println("Event:", eventStr)
 	err := json.Unmarshal([]byte(eventStr), &event)
 	if err != nil {
 		return "", fmt.Errorf("failed to unmarshal event: %v", err)
 	}
 
 	userEmail := event.Request.UserAttributes["email"]
-
+	fmt.Println("User email:", userEmail)
 	// Initialize the user in your datastore
-	err = initializeUserInDatastore(userEmail)
-	if err != nil {
-		return "", err
-	}
+	// err = initializeUserInDatastore(userEmail)
+	// if err != nil {
+	// 	return "", err
+	// }
 
 	return "User initialized", nil
 }
